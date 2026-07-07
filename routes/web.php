@@ -138,10 +138,10 @@ Route::middleware(['auth'])->get('/api/antrian-status/{id}', function ($id) {
     ]);
 })->name('api.antrian-status');
 
-Route::middleware(['auth', 'throttle:role-limits'])->group(function () {
-    // Menggunakan string jalur lengkap agar Laravel tidak tersesat
-    Route::get('/dashboard', 'App\Http\Controllers\DashboardController@index');
-
-    // Atau jika controllermu bernama AdminController / HomeController, sesuaikan saja jalurnya:
-    // Route::get('/dashboard', 'App\Http\Controllers\AdminController@index');
+Route::middleware(['auth'])->group(function () {
+    Route::middleware(['throttle:role-limits'])->group(function () {
+        // Taruh semua rute dashboard admin, dokter, dan pasien kamu di sini
+        Route::get('/dashboard', 'App\Http\Controllers\DashboardController@index');
+        // ... rute lainnya ...
+    });
 });

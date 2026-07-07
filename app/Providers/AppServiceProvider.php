@@ -28,20 +28,20 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme('https');
         }
 
-        // 2. Definisi Throttling Berdasarkan 3 Role Keamanan (Diperlonggar)
+        // 2. Definisi Throttling Berdasarkan 3 Role Keamanan (Mode Aman Cloud)
         RateLimiter::for('role-limits', function (Request $request) {
             $user = $request->user();
 
-            // Jika user belum login, berikan batas aman yang lebih besar saat pertama load
+            // JIKA USER BELUM LOGIN: Berikan batas sangat longgar agar aset web tidak memicu 429
             if (!$user) {
-                return Limit::perMinute(200)->by($request->ip());
+                return Limit::none(); // Menghilangkan batasan untuk tamu agar halaman login aman terbuka
             }
 
-            // Longgarkan limit per menit agar aman dari false-positive di server cloud
+            // JIKA SUDAH LOGIN: Batasi ketat berdasarkan role masing-masing demi keamanan
             return match ($user->role) {
-                'admin'  => Limit::perMinute(500)->by($user->id),  // Admin: 500 request/menit
-                'dokter' => Limit::perMinute(300)->by($user->id),  // Dokter: 300 request/menit
-                'pasien' => Limit::perMinute(300)->by($user->id),  // Pasien: 300 request/menit
+                'admin'  => Limit::perMinute(500)->by($user->id),
+                'dokter' => Limit::perMinute(300)->by($user->id),
+                'pasien' => Limit::perMinute(300)->by($user->id),
                 default  => Limit::perMinute(300)->by($user->id),
             };
         });
