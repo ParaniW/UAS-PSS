@@ -11,11 +11,7 @@
         "laravel/reverb": "^1.0",
         "laravel/sanctum": "^4.3",
         "laravel/tinker": "^2.9",
-        "maatwebsite/excel": "^3.1",
-        "nesbot/carbon": "2.84.1",
-        "symfony/clock": "^7.1",
-        "symfony/translation": "^7.1",
-        "maennchen/zipstream-php": "^2.1"
+        "maatwebsite/excel": "^3.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -71,11 +67,6 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
-        },
-        "platform": {
-            "php": "8.2.32",
-            "ext-zip": "1.22.0",
-            "ext-gd": "8.3"
         }
     },
     "minimum-stability": "stable",
