@@ -1,10 +1,6 @@
 {
   "$schema": "https://schema.railpack.com",
   "php": {
-    "extensions": [
-      "gd",
-      "zip",
-      "intl"
-    ]
+    "version": "8.4"
   }
 }
