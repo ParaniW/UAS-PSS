@@ -10,7 +10,7 @@ class ObatController extends Controller
 {
     public function index()
     {
-        $obats = Obat::latest()->get();
+        $obats = Obat::latest()->paginate(5);
 
         return view('admin.obat.index', compact('obats'));
     }

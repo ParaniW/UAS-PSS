@@ -20,7 +20,7 @@ class RiwayatController extends Controller
                 $query->where('id_dokter', $dokterId);
             })
             ->latest('tgl_periksa')
-            ->get();
+            ->paginate(5);
 
         return view('dokter.riwayat-pasien.index', compact('riwayatPasien'));
     }

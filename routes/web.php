@@ -63,7 +63,7 @@ Route::middleware(['auth', 'role:admin'])
                 'totalObat'   => Obat::count(),
                 'polis'       => Poli::withCount('dokters')->latest('updated_at')->take(5)->get(),
             ]);
-        })->name('dashboard');
+        })->middleware('homepage.throttle:5')->name('dashboard');
 
         Route::get('/dokter/export', [ExportController::class, 'dokter'])->name('dokter.export');
         Route::get('/pasien/export', [ExportController::class, 'pasien'])->name('pasien.export');
@@ -86,7 +86,7 @@ Route::middleware(['auth', 'role:dokter'])
     ->name('dokter.')
     ->group(function () {
 
-        Route::get('/dashboard', [DokterDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard', [DokterDashboardController::class, 'index'])->middleware('homepage.throttle:5')->name('dashboard');
 
         Route::get('/jadwal-periksa/export', [ExportController::class, 'jadwalPeriksa'])->name('jadwal-periksa.export');
         Route::get('/riwayat-pasien/export', [ExportController::class, 'riwayatPasien'])->name('riwayat-pasien.export');
@@ -116,7 +116,7 @@ Route::middleware(['auth', 'role:pasien'])
     ->name('pasien.')
     ->group(function () {
 
-        Route::get('/dashboard', [PasienDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/dashboard', [PasienDashboardController::class, 'index'])->middleware('homepage.throttle:5')->name('dashboard');
 
         // Route tambahan jika masih menggunakan controller lama
         Route::get('/daftar-poli', [DaftarPoliController::class, 'create'])->name('daftar-poli.create');
