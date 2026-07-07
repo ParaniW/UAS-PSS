@@ -1,0 +1,17 @@
+$kind: http-request
+url: http://127.0.0.1:8000/api/register
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "nama": "Pasien Baru",
+      "email": "pasienbaru@example.com",
+      "password": "password123",
+      "alamat": "Jakarta",
+      "no_ktp": "1234567890123456",
+      "no_hp": "081234567890"
+    }
+order: 1000

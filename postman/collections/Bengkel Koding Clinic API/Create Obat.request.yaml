@@ -1,0 +1,16 @@
+$kind: http-request
+url: http://127.0.0.1:8000/api/obat
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{api_token}}
+body:
+  type: text
+  content: |-
+    {
+      "nama_obat": "Obat Postman",
+      "kemasan": "Box",
+      "harga": 15000,
+      "stok": 50
+    }
+order: 12000

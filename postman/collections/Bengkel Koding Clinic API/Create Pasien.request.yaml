@@ -1,0 +1,15 @@
+$kind: http-request
+url: http://127.0.0.1:8000/api/pasien
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{api_token}}
+body:
+  type: text
+  content: |-
+    {
+      "nama": "Pasien dari Postman",
+      "email": "pasien.postman@example.com",
+      "password": "password123"
+    }
+order: 8000

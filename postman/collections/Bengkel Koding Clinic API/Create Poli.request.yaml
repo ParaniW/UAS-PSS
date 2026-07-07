@@ -1,0 +1,15 @@
+$kind: http-request
+url: http://127.0.0.1:8000/api/poli
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{api_token}}
+body:
+  type: text
+  content: |-
+    {
+      "nama_poli": "Poli Postman",
+      "keterangan": "Dibuat via Postman",
+      "tarif": 90000
+    }
+order: 10000

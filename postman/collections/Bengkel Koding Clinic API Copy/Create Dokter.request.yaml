@@ -1,0 +1,18 @@
+$kind: http-request
+url: http://127.0.0.1:8000/api/dokter
+method: POST
+headers:
+  Content-Type: application/json
+  Authorization: Bearer {{api_token}}
+body:
+  type: text
+  content: |-
+    {
+      "nama": "Dokter Baru",
+      "email": "dokterbaru@example.com",
+      "password": "dokter123",
+      "no_hp": "081234567891",
+      "alamat": "Bandung",
+      "id_poli": 1
+    }
+order: 5000

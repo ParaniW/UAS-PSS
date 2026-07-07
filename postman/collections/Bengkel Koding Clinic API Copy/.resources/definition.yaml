@@ -1,0 +1,4 @@
+$kind: collection
+description: "Postman collection untuk testing API Laravel klinik: register, login, profile, dan resource dokter/poli/obat/pasien."
+variables:
+  api_token: ""

@@ -1,0 +1,14 @@
+# Use this workspace to collaborate
+workspace:
+  id: 46efdba9-f76a-41cd-8127-46987a95ede7
+
+localResources:
+  collections:
+    - ../Postman_Clinic_API.postman_collection.json
+
+# Each entry here maps a local resource to one or more corresponding objects in Postman Cloud
+
+cloudResources:
+  collections:
+    ../postman/collections/Bengkel Koding Clinic API Copy: 42fd07f4-34f3-408a-8a4b-fb759898e245
+    ../postman/collections/Bengkel Koding Clinic API: c7aaf849-12af-40d9-8842-eb1275ec60c5

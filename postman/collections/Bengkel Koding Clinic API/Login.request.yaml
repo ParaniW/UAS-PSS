@@ -1,0 +1,22 @@
+$kind: http-request
+url: http://127.0.0.1:8000/api/login
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+      "email": "admin@gmail.com",
+      "password": "admin123"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      const json = pm.response.json();
+      if (json && json.token) {
+        pm.collectionVariables.set('api_token', json.token);
+        console.log('api_token set');
+      }
+    language: text/javascript
+order: 2000
