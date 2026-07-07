@@ -137,3 +137,8 @@ Route::middleware(['auth'])->get('/api/antrian-status/{id}', function ($id) {
         'current_antrian' => $jadwal->current_antrian ?? 0,
     ]);
 })->name('api.antrian-status');
+
+Route::middleware(['auth', 'throttle:role-limits'])->group(function () {
+    // Rute dashboard admin, dokter, dan pasien kamu di sini...
+    Route::get('/dashboard', [DashboardController::class, 'index']);
+});

@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => RoleMiddleware::class,
             'homepage.throttle' => HomepageThrottleMiddleware::class,
+            'trustProxies' => $middleware->trustProxies(at: '*');
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
