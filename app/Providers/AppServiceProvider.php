@@ -32,17 +32,17 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('role-limits', function (Request $request) {
             $user = $request->user();
 
-            // Jika user belum login, berikan batas longgar agar halaman login & aset tidak macet
+            // Jika user belum login, biarkan lolos tanpa batas agar halaman login & aset tidak macet
             if (!$user) {
                 return Limit::none();
             }
 
-            // Ketika sudah login, semua role dikunci maksimal 10 request per menit
+            // Ketika sudah login, semua role dikunci maksimal 10 request per menit berdasarkan ID unik
             return match ($user->role) {
-                'admin'  => Limit::perMinute(10)->by($user->id),
-                'dokter' => Limit::perMinute(10)->by($user->id),
-                'pasien' => Limit::perMinute(10)->by($user->id),
-                default  => Limit::perMinute(10)->by($user->id),
+                'admin'  => Limit::perMinute(10)->by($user->id . '-dash'),
+                'dokter' => Limit::perMinute(10)->by($user->id . '-dash'),
+                'pasien' => Limit::perMinute(10)->by($user->id . '-dash'),
+                default  => Limit::perMinute(10)->by($user->id . '-dash'),
             };
         });
     }
