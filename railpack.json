@@ -1,4 +1,10 @@
 {
   "$schema": "https://schema.railpack.com",
-  "phpExtensions": ["gd", "zip", "intl"]
+  "php": {
+    "extensions": [
+      "gd",
+      "zip",
+      "intl"
+    ]
+  }
 }
