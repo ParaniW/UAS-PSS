@@ -50,8 +50,14 @@ Route::middleware(['auth', 'role:admin'])
     ->name('admin.')
     ->group(function () {
 
-        // Throttling dipasang khusus di rute dashboard saja agar akurat saat di-refresh 10 kali
+        // Logic Hitung Refresh Khusus Admin Dashboard
         Route::get('/dashboard', function () {
+            $refreshCount = session('dash_refresh_count', 0) + 1;
+            session(['dash_refresh_count' => $refreshCount]);
+            if ($refreshCount > 10) {
+                abort(429, 'Too Many Requests');
+            }
+
             \Carbon\Carbon::setLocale('id');
 
             return view('admin.dashboard', [
@@ -62,7 +68,7 @@ Route::middleware(['auth', 'role:admin'])
                 'totalObat'   => Obat::count(),
                 'polis'       => Poli::withCount('dokters')->latest('updated_at')->take(5)->get(),
             ]);
-        })->middleware('throttle:role-limits')->name('dashboard');
+        })->name('dashboard');
 
         Route::get('/dokter/export', [ExportController::class, 'dokter'])->name('dokter.export');
         Route::get('/pasien/export', [ExportController::class, 'pasien'])->name('pasien.export');
@@ -84,8 +90,15 @@ Route::middleware(['auth', 'role:dokter'])
     ->name('dokter.')
     ->group(function () {
 
-        // Throttling dipasang khusus di rute dashboard saja agar akurat saat di-refresh 10 kali
-        Route::get('/dashboard', [DokterDashboardController::class, 'index'])->middleware('throttle:role-limits')->name('dashboard');
+        // Logic Hitung Refresh Khusus Dokter Dashboard
+        Route::get('/dashboard', function() {
+            $refreshCount = session('dash_refresh_count', 0) + 1;
+            session(['dash_refresh_count' => $refreshCount]);
+            if ($refreshCount > 10) {
+                abort(429, 'Too Many Requests');
+            }
+            return app(DokterDashboardController::class)->index();
+        })->name('dashboard');
 
         Route::get('/jadwal-periksa/export', [ExportController::class, 'jadwalPeriksa'])->name('jadwal-periksa.export');
         Route::get('/riwayat-pasien/export', [ExportController::class, 'riwayatPasien'])->name('riwayat-pasien.export');
@@ -114,8 +127,15 @@ Route::middleware(['auth', 'role:pasien'])
     ->name('pasien.')
     ->group(function () {
 
-        // Throttling dipasang khusus di rute dashboard saja agar akurat saat di-refresh 10 kali
-        Route::get('/dashboard', [PasienDashboardController::class, 'index'])->middleware('throttle:role-limits')->name('dashboard');
+        // Logic Hitung Refresh Khusus Pasien Dashboard
+        Route::get('/dashboard', function() {
+            $refreshCount = session('dash_refresh_count', 0) + 1;
+            session(['dash_refresh_count' => $refreshCount]);
+            if ($refreshCount > 10) {
+                abort(429, 'Too Many Requests');
+            }
+            return app(PasienDashboardController::class)->index();
+        })->name('dashboard');
 
         Route::get('/daftar-poli', [DaftarPoliController::class, 'create'])->name('daftar-poli.create');
         Route::post('/daftar-poli', [DaftarPoliController::class, 'store'])->name('daftar-poli.store');
