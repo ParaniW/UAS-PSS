@@ -1,0 +1,2 @@
+[phases.setup]
+nixPkgs = ["php83", "php83Extensions.gd", "php83Extensions.intl", "php83Extensions.zip"]
