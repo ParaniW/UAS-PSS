@@ -21,7 +21,7 @@ use App\Http\Controllers\Pasien\RiwayatPendaftaranController;
 use App\Http\Controllers\Pasien\PembayaranController as PasienPembayaranController;
 use App\Http\Controllers\Admin\PembayaranController as AdminPembayaranController;
 // Tambahan alias dari image_a1987e.png
-
+use App\Http\Controllers\DashboardController; // <-- Tambahkan ini di baris paling atas!
 
 use App\Models\Poli;
 use App\Models\Obat;
@@ -139,6 +139,9 @@ Route::middleware(['auth'])->get('/api/antrian-status/{id}', function ($id) {
 })->name('api.antrian-status');
 
 Route::middleware(['auth', 'throttle:role-limits'])->group(function () {
-    // Rute dashboard admin, dokter, dan pasien kamu di sini...
-    Route::get('/dashboard', [DashboardController::class, 'index']);
+    // Menggunakan string jalur lengkap agar Laravel tidak tersesat
+    Route::get('/dashboard', 'App\Http\Controllers\DashboardController@index');
+
+    // Atau jika controllermu bernama AdminController / HomeController, sesuaikan saja jalurnya:
+    // Route::get('/dashboard', 'App\Http\Controllers\AdminController@index');
 });
