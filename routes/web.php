@@ -20,8 +20,6 @@ use App\Http\Controllers\Pasien\RiwayatPendaftaranController;
 
 use App\Http\Controllers\Pasien\PembayaranController as PasienPembayaranController;
 use App\Http\Controllers\Admin\PembayaranController as AdminPembayaranController;
-// Tambahan alias dari image_a1987e.png
-use App\Http\Controllers\DashboardController; // <-- Tambahkan ini di baris paling atas!
 
 use App\Models\Poli;
 use App\Models\Obat;
@@ -47,7 +45,7 @@ Route::post('/logout', [AuthController::class, 'logout'])
     ->name('logout');
 
 // ================= ADMIN =================
-Route::middleware(['auth', 'role:admin'])
+Route::middleware(['auth', 'role:admin', 'throttle:role-limits'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
@@ -63,7 +61,7 @@ Route::middleware(['auth', 'role:admin'])
                 'totalObat'   => Obat::count(),
                 'polis'       => Poli::withCount('dokters')->latest('updated_at')->take(5)->get(),
             ]);
-        })->middleware('homepage.throttle:5')->name('dashboard');
+        })->name('dashboard');
 
         Route::get('/dokter/export', [ExportController::class, 'dokter'])->name('dokter.export');
         Route::get('/pasien/export', [ExportController::class, 'pasien'])->name('pasien.export');
@@ -80,18 +78,17 @@ Route::middleware(['auth', 'role:admin'])
     });
 
 // ================= DOKTER =================
-// Logika metode index, store, update, destroy diatur di JadwalPeriksaController (Ref: image_a30822.jpg)
-Route::middleware(['auth', 'role:dokter'])
+Route::middleware(['auth', 'role:dokter', 'throttle:role-limits'])
     ->prefix('dokter')
     ->name('dokter.')
     ->group(function () {
 
-        Route::get('/dashboard', [DokterDashboardController::class, 'index'])->middleware('homepage.throttle:5')->name('dashboard');
+        Route::get('/dashboard', [DokterDashboardController::class, 'index'])->name('dashboard');
 
         Route::get('/jadwal-periksa/export', [ExportController::class, 'jadwalPeriksa'])->name('jadwal-periksa.export');
         Route::get('/riwayat-pasien/export', [ExportController::class, 'riwayatPasien'])->name('riwayat-pasien.export');
 
-        // Jadwal Periksa (Resourceful routes manual sesuai image_a30822.jpg)
+        // Jadwal Periksa
         Route::get('/jadwal-periksa', [JadwalPeriksaController::class, 'index'])->name('jadwal-periksa.index');
         Route::get('/jadwal-periksa/create', [JadwalPeriksaController::class, 'create'])->name('jadwal-periksa.create');
         Route::post('/jadwal-periksa', [JadwalPeriksaController::class, 'store'])->name('jadwal-periksa.store');
@@ -110,15 +107,13 @@ Route::middleware(['auth', 'role:dokter'])
     });
 
 // ================= PASIEN =================
-// Logika metode get dan submit diatur di PasienPoliController (Ref: image_a28c44.png & image_a21ba6.png)
-Route::middleware(['auth', 'role:pasien'])
+Route::middleware(['auth', 'role:pasien', 'throttle:role-limits'])
     ->prefix('pasien')
     ->name('pasien.')
     ->group(function () {
 
-        Route::get('/dashboard', [PasienDashboardController::class, 'index'])->middleware('homepage.throttle:5')->name('dashboard');
+        Route::get('/dashboard', [PasienDashboardController::class, 'index'])->name('dashboard');
 
-        // Route tambahan jika masih menggunakan controller lama
         Route::get('/daftar-poli', [DaftarPoliController::class, 'create'])->name('daftar-poli.create');
         Route::post('/daftar-poli', [DaftarPoliController::class, 'store'])->name('daftar-poli.store');
 
@@ -137,11 +132,3 @@ Route::middleware(['auth'])->get('/api/antrian-status/{id}', function ($id) {
         'current_antrian' => $jadwal->current_antrian ?? 0,
     ]);
 })->name('api.antrian-status');
-
-Route::middleware(['auth'])->group(function () {
-    Route::middleware(['throttle:role-limits'])->group(function () {
-        // Taruh semua rute dashboard admin, dokter, dan pasien kamu di sini
-        Route::get('/dashboard', 'App\Http\Controllers\DashboardController@index');
-        // ... rute lainnya ...
-    });
-});

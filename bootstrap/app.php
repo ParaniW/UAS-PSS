@@ -11,8 +11,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // Mempercayai proxy cloud agar rate limiting aman dari false-positive
+        // 1. Mempercayai proxy Railway agar rate limiting aman dari false-positive
         $middleware->trustProxies(at: '*');
+
+        // 2. Mendaftarkan alias middleware kustom 'role' kamu agar bisa dibaca rute web
+        $middleware->alias([
+            'role' => \App\Http\Middleware\RoleMiddleware::class, // <-- Pastikan arah file RoleMiddleware kamu sudah sesuai di folder ini!
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
