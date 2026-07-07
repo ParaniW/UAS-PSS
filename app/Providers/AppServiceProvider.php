@@ -28,21 +28,21 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme('https');
         }
 
-        // 2. Definisi Throttling Berdasarkan 3 Role Keamanan (Mode Aman Cloud)
+        // 2. Definisi Throttling Ketat: Maksimal 10 Request per Menit untuk Uji Coba UAS
         RateLimiter::for('role-limits', function (Request $request) {
             $user = $request->user();
 
-            // JIKA USER BELUM LOGIN: Berikan batas sangat longgar agar aset web tidak memicu 429
+            // Jika user belum login, berikan batas longgar agar halaman login & aset tidak macet
             if (!$user) {
-                return Limit::none(); // Menghilangkan batasan untuk tamu agar halaman login aman terbuka
+                return Limit::none();
             }
 
-            // JIKA SUDAH LOGIN: Batasi ketat berdasarkan role masing-masing demi keamanan
+            // Ketika sudah login, semua role dikunci maksimal 10 request per menit
             return match ($user->role) {
-                'admin'  => Limit::perMinute(500)->by($user->id),
-                'dokter' => Limit::perMinute(300)->by($user->id),
-                'pasien' => Limit::perMinute(300)->by($user->id),
-                default  => Limit::perMinute(300)->by($user->id),
+                'admin'  => Limit::perMinute(10)->by($user->id),
+                'dokter' => Limit::perMinute(10)->by($user->id),
+                'pasien' => Limit::perMinute(10)->by($user->id),
+                default  => Limit::perMinute(10)->by($user->id),
             };
         });
     }
