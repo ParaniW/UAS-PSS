@@ -5,5 +5,11 @@
     "zip",
     "intl",
     "mbstring"
-  ]
+  ],
+  "build": {
+    "cmds": [
+      "npm install",
+      "npm run build"
+    ]
+  }
 }
